@@ -30,7 +30,7 @@ Welcome to ServiceGuru, a platform designed to connect service providers and use
 - [Divine Marvellous](https://linkedin.com/in/marvellousdivine)
 - [Hycient Miracle](https://ng.linkedin.com/in/miracle-hycient-)
 - [Akamere Franklin](https://ng.linkedin.com/in/franklin-akamere)
-
+- [Deborah Ogwuche](https://ng.linkedin.com/in/deborah-ogwuche)
 
 ## Installation
 
