@@ -11,7 +11,17 @@ function About() {
         connect you with reliable experts in your local area, making it easy for
         you to get the help you need.
       </p>
+
+      <h2 className="about-mission-title">Our Mission</h2>
+      <p className="about-mission-description">
+        Our mission is to simplify the process of finding and hiring trusted
+        service providers. We strive to create a platform that is user-friendly,
+        reliable, and filled with verified professionals ready to assist you
+        with your needs. Your satisfaction and safety are our top priorities.
+      </p>
+    </div>
   );
 }
 
 export default About;
+
