@@ -23,7 +23,27 @@ function Search({ onSearch }) {
   };
 
   return (
-    
+    <div className="col-md-10 mx-auto col-lg-5">
+      <input
+        type="text"
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Search for service type..."
+        className="search-input"
+      />
+
+      <ul className="suggestions-list">
+        {suggestions.map((suggestion, index) => (
+          <li
+            key={index}
+            className="suggestion-item"
+            onClick={() => handleSelectSuggestion(suggestion)}
+          >
+            {suggestion.name}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
