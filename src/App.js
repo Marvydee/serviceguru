@@ -23,7 +23,7 @@ function SearchBar({ onSearch }) {
             Find Trusted Service Providers Near You
           </h1>
           <p className="col-lg-10 fs-4">
-            Connect with local experts for all your needs – from home repairs to
+            Connect with experts for all your needs – from home repairs to
             professional services, we've got you covered.
           </p>
         </div>
