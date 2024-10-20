@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { fetchBusinesses } from "../utils/services";
+import { Link } from "react-router-dom";
 
 function BusinessList({ searchTerm }) {
   const [businesses, setBusinesses] = useState([]);
 
   useEffect(() => {
-    fetchBusinesses(setBusinesses, searchTerm);
+    fetchBusinesses(searchTerm)
+      .then((fetchedBusinesses) => {
+        console.log("Fetched Businesses:", fetchedBusinesses); // Log the businesses
+        setBusinesses(fetchedBusinesses);
+      })
+      .catch((error) => {
+        console.error("Error fetching businesses:", error);
+      });
   }, [searchTerm]);
 
   return (
@@ -18,23 +26,29 @@ function BusinessList({ searchTerm }) {
           businesses.map((business, index) => (
             <div key={index} className="business-item">
               {business.photo && (
-                <img
-                  src={
-                    business.photo ||
-                    "serviceguru-react/src/assets/img/default-image-icon-missing-picture-page-vector-40546530.jpg"
-                  }
-                  alt={`${business.name}`}
-                  className="business-photo"
-                />
+                <Link to={`/business/${business.place_id}`}>
+                  {/* Ensure that business.place_id exists */}
+                  <img
+                    src={
+                      business.photo ||
+                      "serviceguru-react/src/assets/img/default-image-icon-missing-picture-page-vector-40546530.jpg"
+                    }
+                    alt={`${business.name}`}
+                    className="business-photo"
+                  />
+                </Link>
               )}
-              <div className="business-details">
-                <h3 className="business-name">{business.name}</h3>
+              <div className="business-content">
+                <h3 className="business-name">
+                  <Link to={`/business/${business.place_id}`}>
+                    {business.name}
+                  </Link>
+                </h3>
                 <p>
                   <i className="fas fa-star"></i> Rating: {business.rating}{" "}
                 </p>
                 <p>
-                  <i className="fas fa-phone-alt"></i>
-                  {business.phone}
+                  <i className="fas fa-phone-alt"></i> {business.phone}
                 </p>
                 <p>
                   <i className="fas fa-globe"></i>
@@ -47,8 +61,7 @@ function BusinessList({ searchTerm }) {
                   </a>
                 </p>
                 <p>
-                  <i className="fas fa-map-marker-alt"></i>
-                  {business.address}
+                  <i className="fas fa-map-marker-alt"></i> {business.address}
                 </p>
               </div>
             </div>
