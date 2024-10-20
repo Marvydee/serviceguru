@@ -10,3 +10,59 @@ h1 {
   text-align: center;
   color: #333;
 }
+
+#business-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.business-item {
+  background-color: #f4f8fb;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  width: 300px; /* Fixed width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: left;
+}
+
+.business-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.business-photo {
+  width: 100%;
+  height: 200px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.business-name {
+  color: #1b76d1;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.business-content p {
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.business-content i {
+  margin-right: 8px;
+  color: #1b76d1;
+}
+
+#business-list p {
+  text-align: left;
+}
+
