@@ -11,6 +11,50 @@ h1 {
   color: #333;
 }
 
+.search-input {
+  width: 400px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  font-size: 18px;
+  margin-bottom: 15px;
+  outline: none;
+  box-shadow: 0 0 15px rgba(0, 128, 255, 0.4);
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #00aaff;
+  box-shadow: 0 0 20px rgba(0, 128, 255, 0.7);
+}
+
+.suggestions-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border: 2px solid #00aaff;
+  border-radius: 8px;
+  max-width: 400px;
+  box-shadow: 0 0 10px rgba(0, 128, 255, 0.3);
+  background-color: #f9f9f9;
+  overflow: hidden;
+}
+
+.suggestion-item {
+  padding: 12px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.suggestion-item:hover {
+  background-color: #00aaff;
+  color: #fff;
+}
+
 #business-list {
   display: flex;
   flex-wrap: wrap;
