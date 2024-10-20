@@ -4,7 +4,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f0f0f0;
-  /* padding: 20px; */
+
 }
 h1 {
   text-align: center;
@@ -24,7 +24,7 @@ h1 {
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 15px;
-  width: 300px; /* Fixed width */
+  width: 300px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
   text-align: left;
@@ -64,5 +64,40 @@ h1 {
 
 #business-list p {
   text-align: left;
+}
+
+.business-details {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.business-details h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.business-details img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.business-details p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.business-details .address,
+.business-details .phone,
+.business-details .rating {
+  font-weight: bold;
 }
 
