@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchBusinesses } from "../utils/services";
+import fetchBusinesses from "../utils/servicesData";
 import { Link } from "react-router-dom";
 
 function BusinessList({ searchTerm }) {
