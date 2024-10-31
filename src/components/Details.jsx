@@ -18,17 +18,32 @@ const BusinessDetails = () => {
       });
   }, [place_id]);
 
-  useEffect(() => {
+useEffect(() => {
     if (business) {
       const map = new window.google.maps.Map(document.getElementById("map"), {
         center: { lat: business.latitude, lng: business.longitude },
         zoom: 15,
       });
 
-      new window.google.maps.Marker({
-        position: { lat: business.latitude, lng: business.longitude },
-        map,
-      });
+      // Check if `AdvancedMarkerElement` is available
+      if (google.maps.marker?.AdvancedMarkerElement) {
+        // Use AdvancedMarkerElement
+        new google.maps.marker.AdvancedMarkerElement({
+          map: map,
+          position: new google.maps.LatLng(
+            business.latitude,
+            business.longitude
+          ),
+          title: "Business Location",
+        });
+      } else {
+
+        new google.maps.Marker({
+          position: { lat: business.latitude, lng: business.longitude },
+          map: map,
+          title: "Business Location",
+        });
+      }
     }
   }, [business]);
 
