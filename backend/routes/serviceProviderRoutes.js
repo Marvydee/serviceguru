@@ -6,14 +6,14 @@ const {
   verifyEmail,
   resendVerification,
 } = require("../controllers/registerProvider");
-const loginProvider = require("../controllers/loginProvider");
-const updateProvider = require("../controllers/updateProfile");
+const { loginProvider } = require("../controllers/loginProvider");
+const { updateProvider } = require("../controllers/updateProfile");
 const {
   searchProviders,
   getServiceSuggestions,
   getProvidersByIds,
 } = require("../controllers/searchProviders");
-const deleteServicePhoto = require("../controllers/deleteServicePhoto");
+const { deleteServicePhoto } = require("../controllers/deleteServicePhoto");
 const { verifyToken } = require("../middleware/authMiddleware");
 const {
   forgotPassword,
