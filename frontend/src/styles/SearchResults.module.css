@@ -1,0 +1,268 @@
+.resultsContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.resultsTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.highlightText {
+  color: #0062cc;
+  font-weight: 700;
+}
+
+.resultsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.resultCard {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resultCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 1.25rem 0.75rem;
+}
+
+.providerImageContainer {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid #f0f6ff;
+  background-color: #f5f7fa;
+}
+
+.providerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.providerImagePlaceholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f6ff;
+  color: #90a4c0;
+  flex-shrink: 0;
+}
+
+.headerInfo {
+  margin-left: 1rem;
+  flex-grow: 1;
+}
+
+.providerName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 0.25rem;
+  line-height: 1.2;
+}
+
+.providerService {
+  display: inline-block;
+  background-color: #ebf5ff;
+  color: #0062cc;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 30px;
+  margin-bottom: 0.5rem;
+}
+
+.ratingContainer {
+  display: flex;
+  align-items: center;
+}
+
+.starIcon {
+  color: #ffb800;
+  margin-right: 0.25rem;
+}
+
+.ratingScore {
+  font-weight: 600;
+  color: #444;
+}
+
+.cardBody {
+  padding: 0 1.25rem 1rem;
+}
+
+.providerBio {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.contactInfo {
+  margin-top: 0.75rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.contactIcon {
+  margin-right: 0.5rem;
+  color: #6b7c93;
+}
+
+.websiteLink {
+  color: #0062cc;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.websiteLink:hover {
+  color: #004999;
+  text-decoration: underline;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background-color: #f9fafc;
+  border-top: 1px solid #f0f0f5;
+}
+
+.distance {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.viewDetailsButton {
+  display: flex;
+  align-items: center;
+  background-color: #0062cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.viewDetailsButton:hover {
+  background-color: #0051a8;
+}
+
+.buttonIcon {
+  margin-left: 0.5rem;
+}
+
+.photoIndicator {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 1.25rem;
+}
+
+.photoCount {
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 98, 204, 0.1);
+  border-radius: 50%;
+  border-left-color: #0062cc;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.emptyResults {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .resultsList {
+    grid-template-columns: 1fr;
+  }
+
+  .providerImageContainer,
+  .providerImagePlaceholder {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .viewDetailsButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
