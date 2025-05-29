@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
 const registerProvider = require("../controllers/registerProvider");
 const loginProvider = require("../controllers/loginProvider");
@@ -15,6 +16,9 @@ const {
   resetPassword,
   checkResetToken,
 } = require("../controllers/resetPassword");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // ROUTES
 router.post(
