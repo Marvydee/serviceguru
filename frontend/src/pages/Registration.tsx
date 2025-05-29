@@ -308,10 +308,13 @@ const RegistrationPage: React.FC = () => {
         formDataToSend.append("photos", photo.file);
       });
 
-      const response = await fetch("/api/providers/register", {
-        method: "POST",
-        body: formDataToSend,
-      });
+      const response = await fetch(
+        "https://serviceguru-p23f.vercel.app/register",
+        {
+          method: "POST",
+          body: formDataToSend,
+        }
+      );
 
       const data: ApiResponse = await response.json();
 

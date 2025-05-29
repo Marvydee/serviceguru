@@ -20,17 +20,20 @@ const HomePage: React.FC = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch("/api/search-providers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          service,
-          latitude,
-          longitude,
-        }),
-      });
+      const response = await fetch(
+        "https://serviceguru-p23f.vercel.app/search-services",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service,
+            latitude,
+            longitude,
+          }),
+        }
+      );
 
       const data = await response.json();
 

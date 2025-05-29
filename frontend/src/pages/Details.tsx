@@ -12,7 +12,7 @@ import {
   MessageCircle,
   Share2,
 } from "lucide-react";
-import styles from "../styles/ServiceProviderDetails.module.css";
+import styles from "../styles/Details.module.css";
 
 interface ServiceProvider {
   id: string;
@@ -50,12 +50,15 @@ const ServiceProviderDetails: React.FC = () => {
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch(`/api/providers/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://serviceguru-p23f.vercel.app/providers/${id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));

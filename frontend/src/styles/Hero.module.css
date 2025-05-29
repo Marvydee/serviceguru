@@ -328,7 +328,8 @@
 .heroImageOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
+  background-image: url(https://i.postimg.cc/kgrTptSx/when-i-grow-up-i-want-to-be-2023-11-27-04-55-18-utc-jpg-optimal.jpg);
+  /* background: radial-gradient(
       circle at 30% 30%,
       rgba(59, 130, 246, 0.3) 0%,
       transparent 50%
@@ -337,7 +338,10 @@
       circle at 70% 70%,
       rgba(16, 185, 129, 0.3) 0%,
       transparent 50%
-    );
+    ); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 24px;
 }
 

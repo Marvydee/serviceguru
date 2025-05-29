@@ -1,4 +1,4 @@
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import {
   User,
   Camera,
@@ -7,15 +7,28 @@ import {
   MapPin,
   Lock,
   Save,
-  //   X,
   Plus,
   Trash2,
+  Globe,
+  Star,
 } from "lucide-react";
 import styles from "../styles/ServiceProviderDashboard.module.css";
 
-// Type definitions
-interface GeoLocation {
-  coordinates: [number, number];
+// Type definitions matching your backend
+interface ServiceProvider {
+  id: string;
+  name: string;
+  phone: string;
+  service?: string;
+  bio?: string;
+  website?: string;
+  email?: string;
+  distance?: number;
+  rating?: number;
+  reviewCount?: number;
+  address?: string;
+  image?: string;
+  services?: string[];
 }
 
 interface Photo {
@@ -23,14 +36,8 @@ interface Photo {
   public_id: string;
 }
 
-interface ProfileData {
-  name: string;
-  email: string;
-  phone: string;
-  service: string;
-  description: string;
-  address: string;
-  geoLocation: GeoLocation;
+interface ProfileData
+  extends Omit<ServiceProvider, "id" | "distance" | "rating" | "reviewCount"> {
   photos: Photo[];
 }
 
@@ -42,23 +49,151 @@ interface PasswordData {
 
 type TabType = "profile" | "photos" | "password";
 
+// API service functions
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+
+const apiService = {
+  // Get provider profile
+  getProfile: async (providerId: string): Promise<ServiceProvider> => {
+    const response = await fetch(`${API_BASE_URL}/providers/${providerId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+
+    const data = await response.json();
+    return data.provider || data;
+  },
+
+  // Update provider profile
+  updateProfile: async (
+    providerId: string,
+    profileData: Partial<ProfileData>
+  ): Promise<ServiceProvider> => {
+    const formData = new FormData();
+
+    // Add text fields
+    Object.keys(profileData).forEach((key) => {
+      if (
+        key !== "photos" &&
+        profileData[key as keyof ProfileData] !== undefined
+      ) {
+        const value = profileData[key as keyof ProfileData];
+        if (key === "services" && Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
+    const response = await fetch(`${API_BASE_URL}/providers/${providerId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update profile");
+    }
+
+    const data = await response.json();
+    return data.provider || data;
+  },
+
+  // Update password
+  updatePassword: async (
+    providerId: string,
+    passwordData: PasswordData
+  ): Promise<void> => {
+    const response = await fetch(
+      `${API_BASE_URL}/providers/${providerId}/password`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(passwordData),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update password");
+    }
+  },
+
+  // Upload photos
+  uploadPhotos: async (providerId: string, files: File[]): Promise<Photo[]> => {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("photos", file);
+    });
+
+    const response = await fetch(
+      `${API_BASE_URL}/providers/${providerId}/photos`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to upload photos");
+    }
+
+    const data = await response.json();
+    return data.photos || [];
+  },
+
+  // Delete photo
+  deletePhoto: async (providerId: string, photoId: string): Promise<void> => {
+    const response = await fetch(
+      `${API_BASE_URL}/providers/${providerId}/photos/${photoId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete photo");
+    }
+  },
+};
+
 const ServiceProviderDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("profile");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+
   const [profileData, setProfileData] = useState<ProfileData>({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+234 801 234 5678",
-    service: "Plumbing",
-    description: "Professional plumber with 5+ years of experience",
-    address: "123 Lagos Street, Victoria Island",
-    geoLocation: {
-      coordinates: [3.3792, 6.5244],
-    },
-    photos: [
-      { url: "/api/placeholder/300/200", public_id: "photo1" },
-      { url: "/api/placeholder/300/200", public_id: "photo2" },
-    ],
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    bio: "",
+    website: "",
+    address: "",
+    image: "",
+    services: [],
+    photos: [],
   });
 
   const [passwordData, setPasswordData] = useState<PasswordData>({
@@ -69,14 +204,74 @@ const ServiceProviderDashboard: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleProfileUpdate = async (): Promise<void> => {
-    setIsLoading(true);
+  // Get provider ID from localStorage, URL params, or context
+  const providerId = localStorage.getItem("providerId") || ""; // Adjust based on your auth system
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+  // Load initial data
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!providerId) {
+        setError("Provider ID not found");
+        setIsInitialLoading(false);
+        return;
+      }
+
+      try {
+        const provider = await apiService.getProfile(providerId);
+        setProfileData({
+          name: provider.name || "",
+          email: provider.email || "",
+          phone: provider.phone || "",
+          service: provider.service || "",
+          bio: provider.bio || "",
+          website: provider.website || "",
+          address: provider.address || "",
+          image: provider.image || "",
+          services: provider.services || [],
+          photos: [], // Photos would be loaded separately if your backend supports it
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load profile");
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [providerId]);
+
+  const handleProfileUpdate = async (): Promise<void> => {
+    if (!providerId) {
+      setError("Provider ID not found");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // Prepare data for backend (excluding photos which are handled separately)
+      const updateData = {
+        name: profileData.name,
+        email: profileData.email,
+        phone: profileData.phone,
+        service: profileData.service,
+        bio: profileData.bio,
+        website: profileData.website,
+        address: profileData.address,
+        services: profileData.services,
+      };
+
+      await apiService.updateProfile(providerId, updateData);
       alert("Profile updated successfully!");
-    }, 1500);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update profile";
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePasswordUpdate = async (): Promise<void> => {
@@ -85,51 +280,80 @@ const ServiceProviderDashboard: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
+    if (!passwordData.currentPassword || !passwordData.newPassword) {
+      alert("Please fill in all password fields!");
+      return;
+    }
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    if (!providerId) {
+      setError("Provider ID not found");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      await apiService.updatePassword(providerId, passwordData);
       setPasswordData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
       alert("Password updated successfully!");
-    }, 1500);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update password";
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handlePhotoUpload = async (
+    e: ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || !providerId) return;
 
     const fileArray = Array.from(files);
-    fileArray.forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const result = e.target?.result;
-        if (typeof result === "string") {
-          const newPhoto: Photo = {
-            url: result,
-            public_id: `photo_${Date.now()}_${Math.random()
-              .toString(36)
-              .substr(2, 9)}`,
-          };
-          setProfileData((prev) => ({
-            ...prev,
-            photos: [...prev.photos, newPhoto],
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    setIsLoading(true);
+
+    try {
+      const uploadedPhotos = await apiService.uploadPhotos(
+        providerId,
+        fileArray
+      );
+      setProfileData((prev) => ({
+        ...prev,
+        photos: [...prev.photos, ...uploadedPhotos],
+      }));
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to upload photos";
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePhotoDelete = (public_id: string): void => {
-    setProfileData((prev) => ({
-      ...prev,
-      photos: prev.photos.filter((photo) => photo.public_id !== public_id),
-    }));
+  const handlePhotoDelete = async (public_id: string): Promise<void> => {
+    if (!providerId) return;
+
+    try {
+      await apiService.deletePhoto(providerId, public_id);
+      setProfileData((prev) => ({
+        ...prev,
+        photos: prev.photos.filter((photo) => photo.public_id !== public_id),
+      }));
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete photo";
+      setError(errorMessage);
+      alert(errorMessage);
+    }
   };
 
   const handleInputChange =
@@ -139,6 +363,14 @@ const ServiceProviderDashboard: React.FC = () => {
     ): void => {
       setProfileData((prev) => ({ ...prev, [field]: e.target.value }));
     };
+
+  const handleServicesChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const services = e.target.value
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s);
+    setProfileData((prev) => ({ ...prev, services }));
+  };
 
   const handlePasswordChange =
     (field: keyof PasswordData) =>
@@ -157,6 +389,17 @@ const ServiceProviderDashboard: React.FC = () => {
     </button>
   );
 
+  if (isInitialLoading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner} />
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       {/* Header */}
@@ -173,14 +416,27 @@ const ServiceProviderDashboard: React.FC = () => {
           </div>
           <div className={styles.userSection}>
             <div className={styles.userAvatar}>
-              <User />
+              {profileData.image ? (
+                <img src={profileData.image} alt="Profile" />
+              ) : (
+                <User />
+              )}
             </div>
-            <span className={styles.userName}>{profileData.name}</span>
+            <span className={styles.userName}>
+              {profileData.name || "Provider"}
+            </span>
           </div>
         </div>
       </header>
 
       <main className={styles.main}>
+        {error && (
+          <div className={styles.errorMessage}>
+            <p>{error}</p>
+            <button onClick={() => setError("")}>×</button>
+          </div>
+        )}
+
         <div className={styles.card}>
           {/* Tab Navigation */}
           <nav className={styles.tabNavigation}>
@@ -204,6 +460,7 @@ const ServiceProviderDashboard: React.FC = () => {
                         onChange={handleInputChange("name")}
                         className={styles.input}
                         placeholder="Enter your full name"
+                        required
                       />
                     </div>
                   </div>
@@ -218,6 +475,7 @@ const ServiceProviderDashboard: React.FC = () => {
                         onChange={handleInputChange("email")}
                         className={styles.input}
                         placeholder="Enter your email"
+                        required
                       />
                     </div>
                   </div>
@@ -232,39 +490,73 @@ const ServiceProviderDashboard: React.FC = () => {
                         onChange={handleInputChange("phone")}
                         className={styles.input}
                         placeholder="Enter your phone number"
+                        required
                       />
                     </div>
                   </div>
 
                   <div className={styles.inputGroup}>
-                    <label className={styles.label}>Service Type</label>
+                    <label className={styles.label}>Primary Service</label>
                     <select
                       value={profileData.service}
                       onChange={handleInputChange("service")}
                       className={styles.select}
                     >
+                      <option value="">Select a service</option>
                       <option value="Plumbing">Plumbing</option>
                       <option value="Electrical">Electrical</option>
                       <option value="Carpentry">Carpentry</option>
                       <option value="Cleaning">Cleaning</option>
                       <option value="Gardening">Gardening</option>
+                      <option value="Painting">Painting</option>
+                      <option value="HVAC">HVAC</option>
+                      <option value="Roofing">Roofing</option>
                     </select>
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>Website (Optional)</label>
+                    <div className={styles.inputWrapper}>
+                      <Globe className={styles.inputIcon} />
+                      <input
+                        type="url"
+                        value={profileData.website}
+                        onChange={handleInputChange("website")}
+                        className={styles.input}
+                        placeholder="https://your-website.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>
+                      Additional Services (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={profileData.services?.join(", ") || ""}
+                      onChange={handleServicesChange}
+                      className={styles.input}
+                      placeholder="e.g., Emergency repairs, Installations, Maintenance"
+                    />
                   </div>
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Service Description</label>
+                  <label className={styles.label}>
+                    Bio / Service Description
+                  </label>
                   <textarea
-                    value={profileData.description}
-                    onChange={handleInputChange("description")}
+                    value={profileData.bio}
+                    onChange={handleInputChange("bio")}
                     rows={4}
                     className={styles.textarea}
-                    placeholder="Describe your services and experience"
+                    placeholder="Describe your services, experience, and what makes you unique"
                   />
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Address</label>
+                  <label className={styles.label}>Service Address</label>
                   <div className={styles.inputWrapper}>
                     <MapPin className={styles.inputIcon} />
                     <input
@@ -300,9 +592,10 @@ const ServiceProviderDashboard: React.FC = () => {
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className={styles.addButton}
+                    disabled={isLoading}
                   >
                     <Plus />
-                    <span>Add Photos</span>
+                    <span>{isLoading ? "Uploading..." : "Add Photos"}</span>
                   </button>
                 </div>
 
@@ -340,8 +633,11 @@ const ServiceProviderDashboard: React.FC = () => {
                         <button
                           onClick={() => fileInputRef.current?.click()}
                           className={styles.uploadButton}
+                          disabled={isLoading}
                         >
-                          Upload Your First Photo
+                          {isLoading
+                            ? "Uploading..."
+                            : "Upload Your First Photo"}
                         </button>
                       </div>
                     </div>

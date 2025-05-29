@@ -73,7 +73,7 @@ const ForgotPasswordPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/auth/check-reset-token/${resetToken}`,
+        `https://serviceguru-p23f.vercel.app/check-reset-token/${resetToken}`,
         {
           method: "GET",
           headers: {
@@ -117,13 +117,16 @@ const ForgotPasswordPage: React.FC = () => {
     setMessage("");
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "https://serviceguru-p23f.vercel.app/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const data: ApiResponse = await response.json();
 
@@ -166,16 +169,19 @@ const ForgotPasswordPage: React.FC = () => {
     setMessage("");
 
     try {
-      const response = await fetch(`/api/auth/reset-password/${token}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          newPassword,
-          confirmPassword,
-        }),
-      });
+      const response = await fetch(
+        `https://serviceguru-p23f.vercel.app/reset-password/${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newPassword,
+            confirmPassword,
+          }),
+        }
+      );
 
       const data: ApiResponse = await response.json();
 

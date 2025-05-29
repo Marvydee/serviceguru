@@ -258,17 +258,20 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
       setShowSuggestions(false);
 
       // API call to backend
-      const response = await fetch("/api/search-services", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          service: service.trim(),
-          latitude,
-          longitude,
-        }),
-      });
+      const response = await fetch(
+        "https://serviceguru-p23f.vercel.app/search-services",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service: service.trim(),
+            latitude,
+            longitude,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
