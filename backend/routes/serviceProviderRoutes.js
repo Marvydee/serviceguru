@@ -9,7 +9,7 @@ const {
   getProvidersByIds,
 } = require("../controllers/searchProviders");
 const deleteServicePhoto = require("../controllers/deleteServicePhoto");
-const { verifyToken } = require("../middlewares/authMiddleware");
+const { verifyToken } = require("../middleware/authMiddleware");
 const {
   forgotPassword,
   resetPassword,
