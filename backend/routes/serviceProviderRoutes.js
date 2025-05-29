@@ -1,7 +1,11 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
-const registerProvider = require("../controllers/registerProvider");
+const {
+  registerProvider,
+  verifyEmail,
+  resendVerification,
+} = require("../controllers/registerProvider");
 const loginProvider = require("../controllers/loginProvider");
 const updateProvider = require("../controllers/updateProfile");
 const {
@@ -21,13 +25,9 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // ROUTES
-router.post(
-  "/register",
-  upload.array("photos"),
-  registerProvider.registerProvider
-);
-router.post("/verify-email", registerProvider.verifyEmail);
-router.post("/resend-verification", registerProvider.resendVerification);
+router.post("/register", upload.array("photos"), registerProvider);
+router.post("/verify-email", verifyEmail);
+router.post("/resend-verification", resendVerification);
 router.post("/login", loginProvider);
 router.put(
   "/:id",
