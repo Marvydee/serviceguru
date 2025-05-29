@@ -7,7 +7,10 @@ const {
   resendVerification,
 } = require("../controllers/registerProvider");
 const { loginProvider } = require("../controllers/loginProvider");
-const { updateProvider } = require("../controllers/updateProfile");
+const {
+  updateProfile,
+  updatePassword,
+} = require("../controllers/updateProfile");
 const {
   searchProviders,
   getServiceSuggestions,
@@ -29,13 +32,8 @@ router.post("/register", upload.array("photos"), registerProvider);
 router.post("/verify-email", verifyEmail);
 router.post("/resend-verification", resendVerification);
 router.post("/login", loginProvider);
-router.put(
-  "/:id",
-  verifyToken,
-  upload.array("photos"),
-  updateProvider.updateProfile
-);
-router.put("/:id/password", verifyToken, updateProvider.updatePassword);
+router.put("/:id", verifyToken, upload.array("photos"), updateProfile);
+router.put("/:id/password", verifyToken, updatePassword);
 router.post("/search-services", searchProviders);
 router.get("/providers/:id", getProvidersByIds);
 router.get("/service-suggestions", getServiceSuggestions);
