@@ -327,10 +327,6 @@ const createEmailTransporter = () => {
   });
 };
 
-const generateVerificationToken = () => {
-  return crypto.randomBytes(32).toString("hex");
-};
-
 // Send verification email with 6-digit code
 const sendVerificationEmail = async (email, name, verificationCode) => {
   const transporter = createEmailTransporter();
@@ -488,6 +484,9 @@ exports.resendVerification = async (req, res) => {
       }
     }
 
+    const generateVerificationCode = () => {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    };
     // Generate new verification code
     const verificationCode = generateVerificationCode();
 
