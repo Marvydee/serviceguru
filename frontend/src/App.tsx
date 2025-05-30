@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import ServiceProviderDashboard from "./pages/Dashboard";
 import ServiceProviderDetails from "./pages/Details";
+import EmailVerificationPage from "./pages/Verification";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/dashboard" element={<ServiceProviderDashboard />} />
           <Route path="/provider/:id" element={<ServiceProviderDetails />} />
+          <Route path="/verify-email" element={<EmailVerificationPage />} />
         </Routes>
       </Router>
     </div>

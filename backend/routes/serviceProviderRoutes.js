@@ -1,5 +1,4 @@
 const express = require("express");
-const multer = require("multer");
 const router = express.Router();
 const {
   registerProvider,
@@ -23,12 +22,10 @@ const {
   resetPassword,
   checkResetToken,
 } = require("../controllers/resetPassword");
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const { upload } = require("../config/cloudinary");
 
 // ROUTES
-router.post("/register", upload.array("photos"), registerProvider);
+router.post("/register", upload.array("photos", 5), registerProvider);
 router.post("/verify-email", verifyEmail);
 router.post("/resend-verification", resendVerification);
 router.post("/login", loginProvider);

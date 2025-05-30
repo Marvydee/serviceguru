@@ -10,7 +10,6 @@ import {
   Plus,
   Trash2,
   Globe,
-  Star,
 } from "lucide-react";
 import styles from "../styles/ServiceProviderDashboard.module.css";
 
@@ -51,7 +50,7 @@ type TabType = "profile" | "photos" | "password";
 
 // API service functions
 const API_BASE_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  process.env.REACT_APP_API_URL || "https://serviceguru-qlng.onrender.com";
 
 const apiService = {
   // Get provider profile

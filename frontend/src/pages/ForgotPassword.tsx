@@ -73,7 +73,7 @@ const ForgotPasswordPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://serviceguru-p23f.vercel.app/check-reset-token/${resetToken}`,
+        `https://serviceguru-qlng.onrender.com/check-reset-token/${resetToken}`,
         {
           method: "GET",
           headers: {
@@ -118,7 +118,7 @@ const ForgotPasswordPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://serviceguru-p23f.vercel.app/forgot-password",
+        "https://serviceguru-qlng.onrender.com/forgot-password",
         {
           method: "POST",
           headers: {
@@ -170,7 +170,7 @@ const ForgotPasswordPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://serviceguru-p23f.vercel.app/reset-password/${token}`,
+        `https://serviceguru-qlng.onrender.com/reset-password/${token}`,
         {
           method: "POST",
           headers: {

@@ -21,7 +21,7 @@ const HomePage: React.FC = () => {
       setError(null);
 
       const response = await fetch(
-        "https://serviceguru-p23f.vercel.app/search-services",
+        "https://serviceguru-qlng.onrender.com/search-services",
         {
           method: "POST",
           headers: {

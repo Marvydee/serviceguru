@@ -51,7 +51,7 @@ const ServiceProviderDetails: React.FC = () => {
         setError(null);
 
         const response = await fetch(
-          `https://serviceguru-p23f.vercel.app/providers/${id}`,
+          `https://serviceguru-qlng.onrender.com/providers/${id}`,
           {
             method: "GET",
             headers: {

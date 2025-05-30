@@ -1,0 +1,317 @@
+/* EmailVerification.module.css */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.formCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.formContainer {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.mailIcon {
+  width: 4rem;
+  height: 4rem;
+  color: #667eea;
+  padding: 1rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 50%;
+}
+
+.textSection {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+}
+
+.description {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.email {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.subDescription {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.codeSection {
+  margin-bottom: 2rem;
+}
+
+.codeInputs {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.codeInput {
+  width: 3rem;
+  height: 3.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: white;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.codeInput:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: scale(1.05);
+}
+
+.codeInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.codeInputError {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.verifyButton {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 14px 0 rgba(102, 126, 234, 0.3);
+}
+
+.verifyButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(102, 126, 234, 0.4);
+}
+
+.verifyButton:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.resendSection {
+  margin-bottom: 1.5rem;
+}
+
+.resendText {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.resendButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.resendButton:hover:not(:disabled) {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+.resendButton:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.helpSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.helpText {
+  color: #6b7280;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* Success State */
+.successCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.successIcon {
+  margin-bottom: 1.5rem;
+}
+
+.successTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669;
+  margin-bottom: 1rem;
+}
+
+.successMessage {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .formContainer {
+    padding: 2rem 1.5rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .codeInputs {
+    gap: 0.5rem;
+  }
+
+  .codeInput {
+    width: 2.5rem;
+    height: 3rem;
+    font-size: 1.25rem;
+  }
+
+  .mailIcon {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+/* Animation for code inputs */
+@keyframes bounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+.codeInput:focus {
+  animation: bounce 0.6s ease-in-out;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

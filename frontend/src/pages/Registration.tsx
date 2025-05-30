@@ -12,7 +12,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/Registration.module.css";
 
 // Types and Interfaces
@@ -104,6 +104,7 @@ const RegistrationPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [photos, setPhotos] = useState<PhotoUpload[]>([]);
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const serviceOptions: ServiceOption[] = [
     "Plumbing",
@@ -309,7 +310,7 @@ const RegistrationPage: React.FC = () => {
       });
 
       const response = await fetch(
-        "https://serviceguru-p23f.vercel.app/register",
+        "https://serviceguru-qlng.onrender.com/register",
         {
           method: "POST",
           body: formDataToSend,
@@ -319,9 +320,10 @@ const RegistrationPage: React.FC = () => {
       const data: ApiResponse = await response.json();
 
       if (data.success) {
-        alert(
-          "Registration successful! Please check your email to verify your account."
-        );
+        // Redirect to email verification page with email in state
+        navigate("/verify-email", {
+          state: { email: formData.email },
+        });
         // Reset form or redirect
         setFormData({
           name: "",
@@ -335,7 +337,6 @@ const RegistrationPage: React.FC = () => {
           bio: "",
           website: "",
         });
-        setPhotos([]);
       } else {
         setErrors({ submit: data.message || "Registration failed" });
       }

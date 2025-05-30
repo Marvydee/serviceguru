@@ -53,7 +53,7 @@ const Login: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://serviceguru-p23f.vercel.app//login",
+        "https://serviceguru-qlng.onrender.com/login",
         {
           method: "POST",
           headers: {
