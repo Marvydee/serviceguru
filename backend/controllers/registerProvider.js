@@ -44,7 +44,7 @@ const deleteCloudinaryImages = async (publicIds) => {
 
 // Email transporter
 const createEmailTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: process.env.SMTP_PORT || 587,
     secure: false,
