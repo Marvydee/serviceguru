@@ -217,6 +217,9 @@ exports.registerProvider = async (req, res) => {
       uploadedImageIds = req.files.map((file) => file.filename);
     }
 
+    const generateVerificationCode = () => {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    };
     // Generate email verification code (6-digit)
     const emailVerificationCode = generateVerificationCode();
 
