@@ -316,7 +316,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 const createEmailTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: process.env.SMTP_PORT || 587,
     secure: false,
