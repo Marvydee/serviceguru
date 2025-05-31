@@ -87,7 +87,7 @@ const serviceProviderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    emailVerificationToken: {
+    emailVerificationCode: {
       type: String,
       default: null,
     },
@@ -209,6 +209,26 @@ serviceProviderSchema.pre("save", function (next) {
   }
 
   next();
+});
+
+serviceProviderSchema.pre("save", function (next) {
+  console.log("=== PRE-SAVE MIDDLEWARE ===");
+  console.log("emailVerificationCode:", this.emailVerificationCode);
+  console.log("emailVerificationCode type:", typeof this.emailVerificationCode);
+  console.log(
+    "emailVerificationCodeCreatedAt:",
+    this.emailVerificationCodeCreatedAt
+  );
+  next();
+});
+
+serviceProviderSchema.post("save", function (doc) {
+  console.log("=== POST-SAVE MIDDLEWARE ===");
+  console.log("Saved emailVerificationCode:", doc.emailVerificationCode);
+  console.log(
+    "Saved emailVerificationCode type:",
+    typeof doc.emailVerificationCode
+  );
 });
 
 // Instance methods

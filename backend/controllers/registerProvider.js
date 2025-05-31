@@ -298,6 +298,19 @@ const registerProvider = async (req, res) => {
 
     const provider = new ServiceProvider(providerData);
     await provider.save();
+    const checkProvider = await ServiceProvider.findOne({
+      email: sanitizedData.email,
+    });
+    console.log(
+      "Database check - emailVerificationCode:",
+      checkProvider.emailVerificationCode
+    );
+    console.log("Database check - all verification fields:", {
+      emailVerified: checkProvider.emailVerified,
+      emailVerificationCode: checkProvider.emailVerificationCode,
+      emailVerificationCodeCreatedAt:
+        checkProvider.emailVerificationCodeCreatedAt,
+    });
 
     console.log(
       "Saved verification code to DB:",
@@ -328,6 +341,14 @@ const registerProvider = async (req, res) => {
         "Service provider registered successfully. Please check your email to verify your account.",
       provider: providerResponse,
     });
+    console.log("=== REGISTRATION DEBUG ===");
+    console.log("Generated code:", emailVerificationCode);
+    console.log("Code type:", typeof emailVerificationCode);
+    console.log("Saved provider code:", provider.emailVerificationCode);
+    console.log(
+      "Saved provider code type:",
+      typeof provider.emailVerificationCode
+    );
   } catch (err) {
     console.error("Register Provider Error:", err);
 
@@ -365,7 +386,11 @@ const verifyEmail = async (req, res) => {
   try {
     const { email, code } = req.body;
 
-    console.log("Verification request:", { email, code });
+    console.log("=== EMAIL VERIFICATION DEBUG ===");
+    console.log("Received email:", email);
+    console.log("Received code:", code);
+    console.log("Code type:", typeof code);
+    console.log("Code length:", code?.length);
 
     if (!email || !code) {
       return res.status(400).json({
@@ -382,6 +407,10 @@ const verifyEmail = async (req, res) => {
     }
 
     if (!/^\d{6}$/.test(code)) {
+      console.log(
+        "Code validation failed. Regex test result:",
+        /^\d{6}$/.test(code)
+      );
       return res.status(400).json({
         success: false,
         message: "Verification code must be 6 digits",
@@ -392,7 +421,36 @@ const verifyEmail = async (req, res) => {
       email: email.toLowerCase().trim(),
     });
 
-    console.log("Found provider:", provider ? "Yes" : "No");
+    console.log("Provider found:", !!provider);
+    if (provider) {
+      console.log("Provider ID:", provider._id);
+      console.log("Stored code:", provider.emailVerificationCode);
+      console.log("Stored code type:", typeof provider.emailVerificationCode);
+      console.log(
+        "Code match (strict):",
+        provider.emailVerificationCode === code
+      );
+      console.log(
+        "Code match (loose):",
+        provider.emailVerificationCode == code
+      );
+      console.log("Email verified status:", provider.emailVerified);
+
+      // Check code age
+      const codeAge = Date.now() - provider.emailVerificationCodeCreatedAt;
+      const tenMinutes = 10 * 60 * 1000;
+      console.log("Code age (ms):", codeAge);
+      console.log("Ten minutes (ms):", tenMinutes);
+      console.log("Code expired:", codeAge > tenMinutes);
+
+      if (provider.emailVerificationCodeCreatedAt) {
+        console.log(
+          "Code created at:",
+          new Date(provider.emailVerificationCodeCreatedAt)
+        );
+        console.log("Current time:", new Date());
+      }
+    }
 
     if (!provider) {
       return res.status(400).json({
@@ -401,10 +459,15 @@ const verifyEmail = async (req, res) => {
       });
     }
 
-    console.log("Stored code:", provider.emailVerificationCode);
-    console.log("Received code:", code);
+    // Convert both to strings and trim whitespace for comparison
+    const storedCode = String(provider.emailVerificationCode).trim();
+    const receivedCode = String(code).trim();
 
-    if (provider.emailVerificationCode !== code) {
+    console.log("Trimmed stored code:", storedCode);
+    console.log("Trimmed received code:", receivedCode);
+    console.log("Trimmed codes match:", storedCode === receivedCode);
+
+    if (storedCode !== receivedCode) {
       return res.status(400).json({
         success: false,
         message: "Invalid verification code",
@@ -438,6 +501,7 @@ const verifyEmail = async (req, res) => {
     });
 
     console.log("Email verified successfully for:", email);
+    console.log("=== END DEBUG ===");
 
     res.json({
       success: true,

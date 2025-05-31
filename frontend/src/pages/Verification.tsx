@@ -106,6 +106,12 @@ const EmailVerificationPage: React.FC = () => {
   const handleVerification = async (
     verificationCode: string
   ): Promise<void> => {
+    console.log("=== FRONTEND VERIFICATION DEBUG ===");
+    console.log("Verification code:", verificationCode);
+    console.log("Code length:", verificationCode.length);
+    console.log("Code type:", typeof verificationCode);
+    console.log("Email:", email);
+
     if (verificationCode.length !== 6) {
       setError("Please enter all 6 digits");
       return;
@@ -115,6 +121,14 @@ const EmailVerificationPage: React.FC = () => {
     setError("");
 
     try {
+      const requestBody = {
+        email: email,
+        code: verificationCode,
+      };
+
+      console.log("Request body:", requestBody);
+      console.log("Request body JSON:", JSON.stringify(requestBody));
+
       const response = await fetch(
         "https://serviceguru-qlng.onrender.com/verify-email",
         {
@@ -122,18 +136,18 @@ const EmailVerificationPage: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            email: email,
-            code: verificationCode,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
+
       const data: ApiResponse = await response.json();
+      console.log("Response data:", data);
 
       if (data.success) {
         setSuccess(true);
-        // Redirect to login after 2 seconds
         setTimeout(() => {
           navigate("/login", {
             state: {
@@ -143,8 +157,8 @@ const EmailVerificationPage: React.FC = () => {
           });
         }, 2000);
       } else {
+        console.log("Verification failed:", data.message);
         setError(data.message || "Invalid verification code");
-        // Clear the code inputs on error
         setCode(["", "", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }
@@ -308,7 +322,7 @@ const EmailVerificationPage: React.FC = () => {
             <div className={styles.helpSection}>
               <p className={styles.helpText}>
                 Make sure to check your spam folder if you don't see the email.
-                The verification code expires in 15 minutes.
+                The verification code expires in 10 minutes.
               </p>
             </div>
           </div>
