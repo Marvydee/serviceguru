@@ -275,7 +275,8 @@ exports.getProviderById = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Provider Details Error:", err);
+    console.error("Provider Details Error:", err.stack || err.message || err);
+
 
     // Handle specific MongoDB errors
     if (err.name === "CastError") {
