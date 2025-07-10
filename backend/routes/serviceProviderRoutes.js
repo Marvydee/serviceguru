@@ -32,7 +32,7 @@ router.post("/login", loginProvider);
 router.put("/:id", verifyToken, upload.array("photos"), updateProfile);
 router.put("/:id/password", verifyToken, updatePassword);
 router.post("/search-services", searchProviders);
-router.get("/providers/:id", getProvidersByIds);
+router.get("/providers/:id", getProviderById);
 router.get("/service-suggestions", getServiceSuggestions);
 router.post("/delete-photo", deleteServicePhoto);
 router.post("/forgot-password", forgotPassword);
