@@ -13,6 +13,7 @@ const {
 const {
   searchProviders,
   getServiceSuggestions,
+  getProviderById,
   getProvidersByIds,
 } = require("../controllers/searchProviders");
 const { deleteServicePhoto } = require("../controllers/deleteServicePhoto");
@@ -32,6 +33,7 @@ router.post("/login", loginProvider);
 router.put("/:id", verifyToken, upload.array("photos"), updateProfile);
 router.put("/:id/password", verifyToken, updatePassword);
 router.post("/search-services", searchProviders);
+router.get("/provider/:id", getProviderById);
 router.get("/providers/:id", getProviderById);
 router.get("/service-suggestions", getServiceSuggestions);
 router.post("/delete-photo", deleteServicePhoto);
