@@ -256,9 +256,8 @@ exports.getProviderById = async (req, res) => {
     // Add additional computed fields if needed
     const enhancedProvider = {
       ...provider,
-      // Add formatted phone number if needed
+      id: p._id.toString(),
       formattedPhone: formatPhoneNumber(provider.phone),
-      // Add full website URL if needed
       fullWebsiteUrl:
         provider.website && !provider.website.startsWith("http")
           ? `https://${provider.website}`
