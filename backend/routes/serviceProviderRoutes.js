@@ -39,7 +39,7 @@ router.get("/provider/:id", getProviderById);
 router.get("/providers/:id", getProviderById);
 router.get("/service-suggestions", getServiceSuggestions);
 router.post("/delete-photo", deleteServicePhoto);
-router.delete("/:id/photos/:public_id", verifyToken, deleteServicePhoto);
+router.delete("/:id/photos/:public_id(*)", verifyToken, deleteServicePhoto);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 router.get("/check-reset-token/:token", checkResetToken);
