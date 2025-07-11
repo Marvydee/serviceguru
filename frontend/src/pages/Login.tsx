@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styles from "../styles/Login.module.css";
 import { Link, useNavigate } from "react-router-dom";
+import { Mail, Eye, EyeOff, AlertTriangle, Loader2 } from "lucide-react";
+import Logp from "../components/Logo"; // Assuming Logo component is in components folder
 
 // Type definitions
 interface FormData {
@@ -97,10 +99,7 @@ const Login: React.FC = () => {
     <div className={styles.loginContainer}>
       <div className={styles.loginCard}>
         <div className={styles.header}>
-          <div className={styles.logo}>
-            <h1>ServiceGuru</h1>
-            <div className={styles.logoIcon}>🔧</div>
-          </div>
+          <Logp />
           <h2>Welcome Back</h2>
           <p>Sign in to your service provider account</p>
         </div>
@@ -108,7 +107,7 @@ const Login: React.FC = () => {
         <form onSubmit={handleSubmit} className={styles.form}>
           {error && (
             <div className={styles.errorMessage}>
-              <span className={styles.errorIcon}>⚠️</span>
+              <AlertTriangle size={16} className={styles.errorIcon} />
               {error}
             </div>
           )}
@@ -129,7 +128,7 @@ const Login: React.FC = () => {
                 required
                 disabled={loading}
               />
-              <span className={styles.inputIcon}>📧</span>
+              <Mail size={16} className={styles.inputIcon} />
             </div>
           </div>
 
@@ -155,7 +154,7 @@ const Login: React.FC = () => {
                 onClick={togglePasswordVisibility}
                 disabled={loading}
               >
-                {showPassword ? "🙈" : "👁️"}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
@@ -167,7 +166,7 @@ const Login: React.FC = () => {
           >
             {loading ? (
               <div className={styles.loadingSpinner}>
-                <div className={styles.spinner}></div>
+                <Loader2 size={16} className={styles.spinner} />
                 Signing In...
               </div>
             ) : (

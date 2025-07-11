@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   Loader,
   Image,
+  ArrowRight,
   MessageCircle,
   Share2,
 } from "lucide-react";
@@ -28,6 +29,12 @@ interface ServiceProvider {
   address?: string;
   image?: string;
   services?: string[];
+  photos?: Photo[];
+}
+
+interface Photo {
+  url: string;
+  public_id: string;
 }
 
 const ServiceProviderDetails: React.FC = () => {
@@ -38,6 +45,7 @@ const ServiceProviderDetails: React.FC = () => {
   const [provider, setProvider] = useState<ServiceProvider | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
 
   useEffect(() => {
     const fetchProviderDetails = async () => {
@@ -243,6 +251,75 @@ const ServiceProviderDetails: React.FC = () => {
                     {service}
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Service Photos Section */}
+          {provider.photos && provider.photos.length > 0 && (
+            <div className={styles.photosSection}>
+              <h3 className={styles.sectionTitle}>Service Photos</h3>
+              <div className={styles.photosSlider}>
+                <div
+                  className={styles.photosContainer}
+                  style={{
+                    transform: `translateX(-${currentPhotoIndex * 100}%)`,
+                  }}
+                >
+                  {provider.photos.map((photo, index) => (
+                    <div key={index} className={styles.photoCard}>
+                      <img
+                        src={photo.url}
+                        alt={`Service ${index + 1}`}
+                        className={styles.servicePhoto}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {provider.photos.length > 1 && (
+                  <>
+                    <button
+                      className={`${styles.sliderNavigation} ${styles.prevButton}`}
+                      onClick={() =>
+                        setCurrentPhotoIndex((prev) =>
+                          prev === 0 ? provider.photos!.length - 1 : prev - 1
+                        )
+                      }
+                      disabled={provider.photos.length <= 1}
+                    >
+                      <ArrowLeft size={20} />
+                    </button>
+
+                    <button
+                      className={`${styles.sliderNavigation} ${styles.nextButton}`}
+                      onClick={() =>
+                        setCurrentPhotoIndex((prev) =>
+                          prev === provider.photos!.length - 1 ? 0 : prev + 1
+                        )
+                      }
+                      disabled={provider.photos.length <= 1}
+                    >
+                      <ArrowRight size={20} />
+                    </button>
+
+                    <div className={styles.sliderDots}>
+                      {provider.photos.map((_, index) => (
+                        <button
+                          key={index}
+                          className={`${styles.sliderDot} ${
+                            index === currentPhotoIndex ? styles.active : ""
+                          }`}
+                          onClick={() => setCurrentPhotoIndex(index)}
+                        />
+                      ))}
+                    </div>
+
+                    <div className={styles.photoCounter}>
+                      {currentPhotoIndex + 1} / {provider.photos.length}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}

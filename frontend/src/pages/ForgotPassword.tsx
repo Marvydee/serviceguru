@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import styles from "../styles/ForgotPassword.module.css";
+import Logo from "../components/Logo";
 
 // Types
 interface ApiResponse {
@@ -242,7 +243,7 @@ const ForgotPasswordPage: React.FC = () => {
 
         {/* Header */}
         <div className={styles.header}>
-          <div className={styles.logo}>ServiceGuru</div>
+          <Logo />
           <h1 className={styles.title}>
             {currentStep === 1 ? "Forgot Password?" : "Reset Password"}
           </h1>

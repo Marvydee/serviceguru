@@ -12,6 +12,7 @@ import {
   Globe,
 } from "lucide-react";
 import styles from "../styles/ServiceProviderDashboard.module.css";
+import Logo from "../components/Logo";
 
 // Type definitions matching your backend
 interface ServiceProvider {
@@ -155,7 +156,7 @@ const apiService = {
   // Delete photo
   deletePhoto: async (providerId: string, photoId: string): Promise<void> => {
     const response = await fetch(
-      `${API_BASE_URL}/${providerId}/photos/${photoId}`,
+      `${API_BASE_URL}/${providerId}/photos/${encodeURIComponent(photoId)}`,
       {
         method: "DELETE",
         headers: {
@@ -198,10 +199,15 @@ const ServiceProviderDashboard: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleLogout = (): void => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("provider");
+    window.location.href = "/login"; // Adjust based on your route setup
+  };
+
   // Get provider ID from localStorage, URL params, or context
   const provider = JSON.parse(localStorage.getItem("provider") || "{}");
   const providerId = provider.id || provider._id;
-  // Adjust based on your auth system
 
   // Load initial data
   useEffect(() => {
@@ -403,11 +409,8 @@ const ServiceProviderDashboard: React.FC = () => {
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.logoSection}>
-            <div className={styles.logo}>
-              <span>SG</span>
-            </div>
             <div className={styles.logoText}>
-              <h1>ServiceGuru</h1>
+              <Logo />
               <p>Provider Dashboard</p>
             </div>
           </div>
@@ -422,6 +425,9 @@ const ServiceProviderDashboard: React.FC = () => {
             <span className={styles.userName}>
               {profileData.name || "Provider"}
             </span>
+            <button onClick={handleLogout} className={styles.logoutButton}>
+              Logout
+            </button>
           </div>
         </div>
       </header>

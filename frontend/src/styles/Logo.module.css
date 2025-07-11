@@ -1,0 +1,61 @@
+/* Add these styles to your HomePage.module.css file */
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+  background-color: transparent;
+}
+
+.logoImage {
+  width: auto;
+  height: 60px; /* Reduced from 150px for better proportion */
+  max-width: 200px; /* Prevents logo from being too wide */
+  object-fit: contain;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logoImage:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .logo {
+    padding: 0.5rem;
+    justify-content: center;
+  }
+
+  .logoImage {
+    height: 45px;
+    max-width: 140px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+  .logoImage {
+    height: 40px;
+    max-width: 120px;
+  }
+}
+
+/* Alternative styles if you want the logo centered in header */
+.logo.centered {
+  justify-content: center;
+}
+
+/* If you want the logo to have a subtle shadow */
+.logoImage.withShadow {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* If you want a background for the logo */
+.logo.withBackground {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

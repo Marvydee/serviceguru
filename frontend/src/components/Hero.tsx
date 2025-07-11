@@ -2,10 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Search, MapPin, ArrowRight, Loader, X } from "lucide-react";
 import styles from "../styles/Hero.module.css";
 import SearchResults from "../components/SearchResults";
-
-interface HeroProps {
-  onSearch: (service: string, latitude: number, longitude: number) => void;
-}
+import { serviceOptions } from "../data/serviceOptions";
 
 interface ServiceCategory {
   id: string;
@@ -55,68 +52,30 @@ const Hero: React.FC = () => {
   const [isLoadingSuggestions, setIsLoadingSuggestions] =
     useState<boolean>(false);
 
-  const popularCategories: ServiceCategory[] = [
-    { id: "1", name: "Plumbing", icon: "🔧" },
-    { id: "2", name: "Electrical", icon: "⚡" },
-    { id: "3", name: "Cleaning", icon: "🧹" },
-    { id: "4", name: "Landscaping", icon: "🌱" },
-    { id: "5", name: "Home Repair", icon: "🏠" },
-  ];
+  useEffect(() => {
+    const cached = localStorage.getItem("lastSearchData");
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        setService(parsed.service || "");
+        setLatitude(parsed.latitude || null);
+        setLongitude(parsed.longitude || null);
+        setSearchResults(parsed.results || []);
+        setShowResults(true);
+      } catch (e) {
+        console.warn("Failed to restore previous search:", e);
+      }
+    }
+  }, []);
 
   // Comprehensive service suggestions database
-  const allServices: ServiceSuggestion[] = [
-    // Plumbing
-    { id: "1", name: "Plumbing Repair", category: "Plumbing" },
-    { id: "2", name: "Pipe Installation", category: "Plumbing" },
-    { id: "3", name: "Drain Cleaning", category: "Plumbing" },
-    { id: "4", name: "Water Heater Repair", category: "Plumbing" },
-    { id: "5", name: "Toilet Repair", category: "Plumbing" },
-    { id: "6", name: "Faucet Installation", category: "Plumbing" },
-
-    // Electrical
-    { id: "7", name: "Electrical Wiring", category: "Electrical" },
-    { id: "8", name: "Electrical Panel Upgrade", category: "Electrical" },
-    { id: "9", name: "Light Installation", category: "Electrical" },
-    { id: "10", name: "Outlet Installation", category: "Electrical" },
-    { id: "11", name: "Ceiling Fan Installation", category: "Electrical" },
-    { id: "12", name: "Electrical Troubleshooting", category: "Electrical" },
-
-    // Cleaning
-    { id: "13", name: "House Cleaning", category: "Cleaning" },
-    { id: "14", name: "Deep Cleaning", category: "Cleaning" },
-    { id: "15", name: "Carpet Cleaning", category: "Cleaning" },
-    { id: "16", name: "Window Cleaning", category: "Cleaning" },
-    { id: "17", name: "Office Cleaning", category: "Cleaning" },
-    { id: "18", name: "Move-in Cleaning", category: "Cleaning" },
-
-    // Landscaping
-    { id: "19", name: "Lawn Mowing", category: "Landscaping" },
-    { id: "20", name: "Tree Trimming", category: "Landscaping" },
-    { id: "21", name: "Garden Design", category: "Landscaping" },
-    { id: "22", name: "Hedge Trimming", category: "Landscaping" },
-    { id: "23", name: "Sprinkler Installation", category: "Landscaping" },
-    { id: "24", name: "Lawn Care", category: "Landscaping" },
-
-    // Home Repair
-    { id: "25", name: "Handyman Services", category: "Home Repair" },
-    { id: "26", name: "Drywall Repair", category: "Home Repair" },
-    { id: "27", name: "Painting", category: "Home Repair" },
-    { id: "28", name: "Door Repair", category: "Home Repair" },
-    { id: "29", name: "Window Repair", category: "Home Repair" },
-    { id: "30", name: "Flooring Installation", category: "Home Repair" },
-
-    // Additional services
-    { id: "31", name: "HVAC Repair", category: "HVAC" },
-    { id: "32", name: "Air Conditioning", category: "HVAC" },
-    { id: "33", name: "Heating Repair", category: "HVAC" },
-    { id: "34", name: "Appliance Repair", category: "Appliances" },
-    { id: "35", name: "Refrigerator Repair", category: "Appliances" },
-    { id: "36", name: "Roofing", category: "Construction" },
-    { id: "37", name: "Gutter Cleaning", category: "Maintenance" },
-    { id: "38", name: "Pressure Washing", category: "Cleaning" },
-    { id: "39", name: "Pest Control", category: "Pest Control" },
-    { id: "40", name: "Locksmith", category: "Security" },
-  ];
+  const allServices: ServiceSuggestion[] = serviceOptions.map(
+    (name, index) => ({
+      id: (index + 1).toString(),
+      name,
+      category: name,
+    })
+  );
 
   // Debounced function to fetch service suggestions from API
   const fetchServiceSuggestions = useCallback(
@@ -304,6 +263,15 @@ const Hero: React.FC = () => {
       // Update search results with backend data only
       setSearchResults(data.providers || []);
       setShowResults(true);
+      localStorage.setItem(
+        "lastSearchData",
+        JSON.stringify({
+          results: data.providers || [],
+          service: service.trim(),
+          latitude,
+          longitude,
+        })
+      );
 
       // Call the onSearch prop for parent component
     } catch (error) {
@@ -442,22 +410,6 @@ const Hero: React.FC = () => {
               </div>
             </div>
           </form>
-
-          <div className={styles.categoriesSection}>
-            <h3 className={styles.categoriesTitle}>Popular Services</h3>
-            <div className={styles.categories}>
-              {popularCategories.map((category) => (
-                <button
-                  key={category.id}
-                  className={styles.categoryItem}
-                  onClick={() => handleCategoryClick(category.name)}
-                >
-                  <span className={styles.categoryIcon}>{category.icon}</span>
-                  <span>{category.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         <div className={styles.heroImageContainer}>

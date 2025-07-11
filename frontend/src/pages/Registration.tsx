@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/Registration.module.css";
+import { serviceOptions } from "../data/serviceOptions";
+import Logo from "../components/Logo";
 
 // Types and Interfaces
 interface FormData {
@@ -55,34 +57,6 @@ interface ApiResponse {
   message?: string;
 }
 
-type ServiceOption =
-  | "Plumbing"
-  | "Electrical"
-  | "Carpentry"
-  | "Painting"
-  | "Cleaning"
-  | "Landscaping"
-  | "HVAC"
-  | "Roofing"
-  | "Flooring"
-  | "Appliance Repair"
-  | "Home Security"
-  | "Interior Design"
-  | "Moving Services"
-  | "Pest Control"
-  | "Photography"
-  | "Catering"
-  | "Event Planning"
-  | "Tutoring"
-  | "Pet Care"
-  | "Fitness Training"
-  | "Beauty Services"
-  | "Auto Repair"
-  | "Computer Repair"
-  | "Legal Services"
-  | "Accounting"
-  | "Other";
-
 const RegistrationPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -105,35 +79,6 @@ const RegistrationPage: React.FC = () => {
   const [photos, setPhotos] = useState<PhotoUpload[]>([]);
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  const serviceOptions: ServiceOption[] = [
-    "Plumbing",
-    "Electrical",
-    "Carpentry",
-    "Painting",
-    "Cleaning",
-    "Landscaping",
-    "HVAC",
-    "Roofing",
-    "Flooring",
-    "Appliance Repair",
-    "Home Security",
-    "Interior Design",
-    "Moving Services",
-    "Pest Control",
-    "Photography",
-    "Catering",
-    "Event Planning",
-    "Tutoring",
-    "Pet Care",
-    "Fitness Training",
-    "Beauty Services",
-    "Auto Repair",
-    "Computer Repair",
-    "Legal Services",
-    "Accounting",
-    "Other",
-  ];
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -354,7 +299,10 @@ const RegistrationPage: React.FC = () => {
         {/* Header */}
         <div className={styles.header}>
           <h1 className={styles.title}>
-            Join <span className={styles.titleHighlight}>ServiceGuru</span>
+            Join{" "}
+            <span className={styles.titleHighlight}>
+              <Logo />
+            </span>
           </h1>
           <p className={styles.subtitle}>
             Connect with customers and grow your service business
