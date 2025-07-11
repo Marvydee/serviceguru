@@ -7,12 +7,16 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+const allowedOrigins = [
+  'http://localhost:3000', // Dev
+  'https://serviceguru.pages.dev', // Live frontend
+];
 
 // Middleware
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
