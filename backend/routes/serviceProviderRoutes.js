@@ -32,6 +32,7 @@ router.post("/verify-email", verifyEmail);
 router.post("/resend-verification", resendVerification);
 router.post("/login", loginProvider);
 router.put("/:id", verifyToken, upload.array("photos"), updateProfile);
+router.post("/:id/photos", verifyToken, upload.array("photos"), uploadPhotos);
 router.put("/:id/password", verifyToken, updatePassword);
 router.post("/search-services", searchProviders);
 router.get("/provider/:id", getProviderById);
