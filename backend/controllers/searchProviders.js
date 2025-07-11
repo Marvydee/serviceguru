@@ -1,8 +1,17 @@
 const ServiceProvider = require("../models/ServiceProvider");
 
 exports.searchProviders = async (req, res) => {
+  console.log("🎯 Search request received");
+  console.log("📊 Request body:", req.body);
+
   try {
     const { latitude, longitude, service, radius } = req.body;
+    console.log("🔍 Extracted params:", {
+      latitude,
+      longitude,
+      service,
+      radius,
+    });
 
     // Enhanced validation
     if (!latitude || !longitude) {
@@ -67,11 +76,17 @@ exports.searchProviders = async (req, res) => {
       }km of [${latitude}, ${longitude}]`
     );
 
+    console.log(
+      "🗄️ Executing MongoDB query:",
+      JSON.stringify(searchQuery, null, 2)
+    );
     // Execute search with sorting and limiting
     const providers = await ServiceProvider.find(searchQuery)
       .select("-password -__v") // Exclude sensitive and unnecessary fields
       .limit(50) // Limit results for performance
       .lean(); // Return plain objects for better performance
+    console.log("📋 Raw providers found:", providers.length);
+    console.log("📋 Sample provider:", providers[0] || "None");
 
     // Calculate actual distances and add to results
     const providersWithDistance = providers.map((provider) => {
@@ -97,6 +112,12 @@ exports.searchProviders = async (req, res) => {
     // Sort by distance (closest first)
     providersWithDistance.sort(
       (a, b) => (a.distance || 999) - (b.distance || 999)
+    );
+
+    console.log(
+      "✅ Sending response with",
+      providersWithDistance.length,
+      "providers"
     );
 
     // Enhanced response
@@ -275,8 +296,7 @@ exports.getProviderById = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Provider Details Error:", err.stack || err.message || err);
-
+    console.error("Provider Details Error:", err);
 
     // Handle specific MongoDB errors
     if (err.name === "CastError") {
@@ -343,6 +363,7 @@ exports.getProvidersByIds = async (req, res) => {
     // Enhance providers with additional data if needed
     const enhancedProviders = providers.map((provider) => ({
       ...provider,
+      id: provider._id.toString(),
       formattedPhone: formatPhoneNumber(provider.phone),
       fullWebsiteUrl:
         provider.website && !provider.website.startsWith("http")

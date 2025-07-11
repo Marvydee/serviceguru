@@ -24,6 +24,7 @@ const {
   checkResetToken,
 } = require("../controllers/resetPassword");
 const { upload } = require("../config/cloudinary");
+const { uploadPhotos } = require("../controllers/uploadPhotos");
 
 // ROUTES
 router.post("/register", upload.array("photos", 5), registerProvider);
