@@ -58,12 +58,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const handleViewDetails = (providerId: string) => {
-    // Implement navigation to the provider details page
-    // Example: router.push(/provider/${providerId});
-    console.log(`Viewing details for provider: ${providerId}`);
-  };
-
   return (
     <div className={styles.appContainer}>
       <header className={styles.header}>
@@ -94,31 +88,7 @@ const HomePage: React.FC = () => {
 
       <main>
         {/* Hero section with search functionality */}
-        <Hero onSearch={handleSearch} />
-
-        {/* Results section */}
-        <section id="searchResults" className={styles.resultsSection}>
-          {isLoading ? (
-            <div className={styles.loadingContainer}>
-              <div className={styles.spinner}></div>
-              <p>Searching for providers in your area...</p>
-            </div>
-          ) : error ? (
-            <div className={styles.errorContainer}>
-              <div className={styles.errorIcon}>⚠️</div>
-              <h3>Error</h3>
-              <p>{error}</p>
-              <button
-                onClick={() => setError(null)}
-                className={styles.tryAgainButton}
-              >
-                Try Again
-              </button>
-            </div>
-          ) : providers.length > 0 ? (
-            <SearchResults results={providers} isLoading={false} />
-          ) : null}
-        </section>
+        <Hero />
 
         {/* How it works section */}
         <section className={styles.howItWorksSection}>

@@ -32,6 +32,7 @@ interface ServiceProvider {
 
 const ServiceProviderDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  console.log("useParams() ID:", id);
   const navigate = useNavigate();
 
   const [provider, setProvider] = useState<ServiceProvider | null>(null);
@@ -51,7 +52,7 @@ const ServiceProviderDetails: React.FC = () => {
         setError(null);
 
         const response = await fetch(
-          `https://serviceguru-qlng.onrender.com/providers/${id}`,
+          `https://serviceguru-qlng.onrender.com/provider/${id}`,
           {
             method: "GET",
             headers: {

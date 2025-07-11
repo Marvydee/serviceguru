@@ -4,7 +4,7 @@ import { Phone, Globe, Mail, ChevronRight, Star, Image } from "lucide-react";
 import styles from "../styles/SearchResults.module.css";
 
 export interface ServiceProvider {
-  id: string;
+  _id: string;
   name: string;
   phone: string;
   service?: string;
@@ -31,6 +31,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const navigate = useNavigate();
 
   const handleViewDetails = (providerId: string) => {
+    console.log("Navigating to /provider/", providerId);
     navigate(`/provider/${providerId}`);
   };
 
@@ -62,7 +63,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
       <div className={styles.resultsList}>
         {results.map((provider) => (
-          <div key={provider.id} className={styles.resultCard}>
+          <div key={provider._id} className={styles.resultCard}>
             <div className={styles.cardHeader}>
               {provider.image ? (
                 <div className={styles.providerImageContainer}>
@@ -147,7 +148,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
               <button
                 className={styles.viewDetailsButton}
-                onClick={() => handleViewDetails(provider.id)}
+                onClick={() => handleViewDetails(provider._id)}
               >
                 View Details
                 <ChevronRight size={16} className={styles.buttonIcon} />

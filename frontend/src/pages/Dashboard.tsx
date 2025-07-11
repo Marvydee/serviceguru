@@ -15,7 +15,7 @@ import styles from "../styles/ServiceProviderDashboard.module.css";
 
 // Type definitions matching your backend
 interface ServiceProvider {
-  id: string;
+  _id: string;
   name: string;
   phone: string;
   service?: string;
@@ -55,7 +55,7 @@ const API_BASE_URL =
 const apiService = {
   // Get provider profile
   getProfile: async (providerId: string): Promise<ServiceProvider> => {
-    const response = await fetch(`${API_BASE_URL}/providers/${providerId}`, {
+    const response = await fetch(`${API_BASE_URL}/provider/${providerId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const apiService = {
       }
     });
 
-    const response = await fetch(`${API_BASE_URL}/providers/${providerId}`, {
+    const response = await fetch(`${API_BASE_URL}/provider/${providerId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -115,7 +115,7 @@ const apiService = {
     passwordData: PasswordData
   ): Promise<void> => {
     const response = await fetch(
-      `${API_BASE_URL}/providers/${providerId}/password`,
+      `${API_BASE_URL}/provider/${providerId}/password`,
       {
         method: "PUT",
         headers: {
@@ -140,7 +140,7 @@ const apiService = {
     });
 
     const response = await fetch(
-      `${API_BASE_URL}/providers/${providerId}/photos`,
+      `${API_BASE_URL}/provider/${providerId}/photos`,
       {
         method: "POST",
         headers: {
@@ -161,7 +161,7 @@ const apiService = {
   // Delete photo
   deletePhoto: async (providerId: string, photoId: string): Promise<void> => {
     const response = await fetch(
-      `${API_BASE_URL}/providers/${providerId}/photos/${photoId}`,
+      `${API_BASE_URL}/provider/${providerId}/photos/${photoId}`,
       {
         method: "DELETE",
         headers: {
@@ -183,6 +183,7 @@ const ServiceProviderDashboard: React.FC = () => {
   const [error, setError] = useState<string>("");
 
   const [profileData, setProfileData] = useState<ProfileData>({
+    _id: "",
     name: "",
     email: "",
     phone: "",
@@ -204,7 +205,9 @@ const ServiceProviderDashboard: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Get provider ID from localStorage, URL params, or context
-  const providerId = localStorage.getItem("providerId") || ""; // Adjust based on your auth system
+  const provider = JSON.parse(localStorage.getItem("provider") || "{}");
+  const providerId = provider.id || provider._id;
+  // Adjust based on your auth system
 
   // Load initial data
   useEffect(() => {
@@ -218,6 +221,7 @@ const ServiceProviderDashboard: React.FC = () => {
       try {
         const provider = await apiService.getProfile(providerId);
         setProfileData({
+          _id: provider._id,
           name: provider.name || "",
           email: provider.email || "",
           phone: provider.phone || "",

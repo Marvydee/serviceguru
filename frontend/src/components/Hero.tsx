@@ -20,7 +20,7 @@ interface ServiceSuggestion {
 }
 
 interface ServiceProvider {
-  id: string;
+  _id: string;
   name: string;
   phone: string;
   service?: string;
@@ -35,7 +35,7 @@ interface ServiceProvider {
   services?: string[];
 }
 
-const Hero: React.FC<HeroProps> = ({ onSearch }) => {
+const Hero: React.FC = () => {
   const [service, setService] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [isUsingCurrentLocation, setIsUsingCurrentLocation] =
@@ -256,6 +256,11 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
       setIsSearching(true);
       setSearchError(null);
       setShowSuggestions(false);
+      console.log("🔍 Starting search with:", {
+        service: service.trim(),
+        latitude,
+        longitude,
+      });
 
       // API call to backend
       const response = await fetch(
@@ -272,27 +277,35 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
           }),
         }
       );
+      console.log("📡 Response status:", response.status);
+      console.log("📡 Response ok:", response.ok);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error("❌ Response not ok:", errorData);
         throw new Error(
           errorData.message || `HTTP error! status: ${response.status}`
         );
       }
 
       const data = await response.json();
+      console.log("📦 Response data:", data);
 
       // Check if the API response indicates success
       if (!data.success) {
+        console.error("❌ API returned success: false");
         throw new Error(data.message || "Search failed");
       }
+      console.log(
+        "✅ Search successful, providers found:",
+        data.providers?.length || 0
+      );
 
       // Update search results with backend data only
       setSearchResults(data.providers || []);
       setShowResults(true);
 
       // Call the onSearch prop for parent component
-      onSearch(service, latitude, longitude);
     } catch (error) {
       console.error("Search failed:", error);
       setSearchError(
@@ -312,12 +325,6 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   const handleCategoryClick = (categoryName: string) => {
     setService(categoryName);
     setShowSuggestions(false);
-  };
-
-  const handleViewDetails = (providerId: string) => {
-    // Navigate to provider details page
-    console.log(`Viewing details for provider: ${providerId}`);
-    // Example: navigate(`/provider/${providerId}`);
   };
 
   return (
