@@ -1,20 +1,41 @@
-const deletePhotoFromCloudinary = require("../utils/deletePhotoFromCloudinary");
+const ServiceProvider = require("../models/ServiceProvider");
+const mongoose = require("mongoose");
+const { cloudinary } = require("../config/cloudinary");
 
 exports.deleteServicePhoto = async (req, res) => {
   try {
-    const { providerId, public_id } = req.body;
+    const { id, public_id } = req.params;
 
-    await deletePhotoFromCloudinary(public_id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid provider ID" });
+    }
 
-    const updated = await ServiceProvider.findByIdAndUpdate(
-      providerId,
-      { $pull: { photos: { public_id } } },
-      { new: true }
+    const provider = await ServiceProvider.findById(id);
+    if (!provider) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Provider not found" });
+    }
+
+    // Remove photo from Cloudinary
+    await cloudinary.uploader.destroy(public_id);
+
+    // Remove photo from provider.photos
+    provider.photos = provider.photos.filter(
+      (photo) => photo.public_id !== public_id
     );
 
-    res.json({ success: true, provider: updated });
+    await provider.save();
+
+    res.json({
+      success: true,
+      message: "Photo deleted successfully",
+      photos: provider.photos,
+    });
   } catch (err) {
-    console.error("Error deleting photo:", err);
-    res.status(500).json({ success: false, message: err.message });
+    console.error("Delete Photo Error:", err);
+    res.status(500).json({ success: false, message: "Failed to delete photo" });
   }
 };

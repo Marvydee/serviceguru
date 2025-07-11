@@ -92,7 +92,7 @@ const apiService = {
       }
     });
 
-    const response = await fetch(`${API_BASE_URL}/provider/${providerId}`, {
+    const response = await fetch(`${API_BASE_URL}/${providerId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -114,17 +114,14 @@ const apiService = {
     providerId: string,
     passwordData: PasswordData
   ): Promise<void> => {
-    const response = await fetch(
-      `${API_BASE_URL}/provider/${providerId}/password`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(passwordData),
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/${providerId}/password`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(passwordData),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -139,16 +136,13 @@ const apiService = {
       formData.append("photos", file);
     });
 
-    const response = await fetch(
-      `${API_BASE_URL}/provider/${providerId}/photos`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formData,
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/${providerId}/photos`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
 
     if (!response.ok) {
       throw new Error("Failed to upload photos");
@@ -161,7 +155,7 @@ const apiService = {
   // Delete photo
   deletePhoto: async (providerId: string, photoId: string): Promise<void> => {
     const response = await fetch(
-      `${API_BASE_URL}/provider/${providerId}/photos/${photoId}`,
+      `${API_BASE_URL}/${providerId}/photos/${photoId}`,
       {
         method: "DELETE",
         headers: {
