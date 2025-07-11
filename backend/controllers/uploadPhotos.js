@@ -26,7 +26,7 @@ exports.uploadPhotos = async (req, res) => {
 
     const uploadedPhotos = req.files.map((file) => ({
       url: file.path,
-      public_id: file.filename,
+      public_id: file.filename.includes("/") ? file.filename : `service-providers/${file.filename}`,
     }));
 
     provider.photos = [...(provider.photos || []), ...uploadedPhotos];
